@@ -72,3 +72,10 @@ visit [heroku](https://vaadin.com/learn/tutorials/cloud-deployment/heroku) for d
 * enable auto deployments
 * install heroku CLI and use heroku logs --tail -a APP_NAME to access logs
 npm not needed
+
+## h2 console
+enabled by default
+
+* search startup logs for database name
+* example ```H2 console available at '/h2-console'. Database available at 'jdbc:h2:mem:ac4fce0d-18ca-40ce-8b3a-ed822626be8e'```
+* visit [http://localhost:8080/h2-console](http://localhost:8080/h2-console) and update url
