@@ -55,3 +55,20 @@ Once the Docker image is correctly built, you can test it locally using
 ```
 docker run -p 8080:8080 myapp:latest
 ```
+## Deploying to heroku
+visit [heroku](https://vaadin.com/learn/tutorials/cloud-deployment/heroku) for details
+### manual
+* install heroku CLI
+* `heroku plugins:install heroku-cli-deploy`
+1. navigate to project dir
+2. mvn package project
+3. (if no heroku project yet) heroku create HEROKU_APP_NAME --no-remote
+4. heroku deploy:war/jar target/LOCAL_WAR_NAME.war/jar -a HEROKU_APP_NAME
+### automatic
+
+* create heroku project config var MAVEN_SETTINGS_PATH=heroku-settings.xml
+* create `heroku-settings.xml` file in root folder. npm profile not needed
+* connect your github repo to heroku project
+* enable auto deployments
+* install heroku CLI and use heroku logs --tail -a APP_NAME to access logs
+npm not needed
