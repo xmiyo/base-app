@@ -25,7 +25,6 @@ import com.xmiyo.base.ui.views.home.HomeView;
 import com.xmiyo.base.ui.views.helloworld.HelloWorldView;
 import com.xmiyo.base.ui.views.cardlist.CardListView;
 import com.xmiyo.base.ui.views.masterdetail.MasterDetailView;
-import com.xmiyo.base.ui.views.collaborativemasterdetail.CollaborativeMasterDetailView;
 import com.xmiyo.base.ui.views.personform.PersonFormView;
 import com.xmiyo.base.ui.views.addressform.AddressFormView;
 import com.xmiyo.base.ui.views.creditcardform.CreditCardFormView;
@@ -96,7 +95,6 @@ public class MainView extends AppLayout {
         return new Tab[]{createTab("Sign in", SigninView.class), createTab("Register", RegisterView.class),
                 createTab("Home", HomeView.class), createTab("Hello World", HelloWorldView.class),
                 createTab("Card List", CardListView.class), createTab("Master-Detail", MasterDetailView.class),
-                createTab("Collaborative Master-Detail", CollaborativeMasterDetailView.class),
                 createTab("Person Form", PersonFormView.class), createTab("Address Form", AddressFormView.class),
                 createTab("Credit Card Form", CreditCardFormView.class), createTab("Map", MapView.class),
                 createTab("Editor", EditorView.class), createTab("Image List", ImageListView.class)};
