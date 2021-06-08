@@ -7,6 +7,7 @@ import com.vaadin.flow.component.ComponentUtil;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
 import com.vaadin.flow.component.avatar.Avatar;
+import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.H1;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
@@ -19,7 +20,8 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.router.PageTitle;
-import com.xmiyo.base.ui.views.signin.SigninView;
+import com.xmiyo.base.server.security.SecurityUtils;
+import com.xmiyo.base.ui.views.login.LoginView;
 import com.xmiyo.base.ui.views.register.RegisterView;
 import com.xmiyo.base.ui.views.home.HomeView;
 import com.xmiyo.base.ui.views.helloworld.HelloWorldView;
@@ -60,9 +62,18 @@ public class MainView extends AppLayout {
         layout.setAlignItems(FlexComponent.Alignment.CENTER);
         layout.add(new DrawerToggle());
         viewTitle = new H1();
+        layout.expand(viewTitle); //this will push other to right
         layout.add(viewTitle);
+        layout.add(addSecurityLink());
         layout.add(new Avatar());
         return layout;
+    }
+
+    private Component addSecurityLink() {
+        if (SecurityUtils.isUserLoggedIn())
+            return new Anchor("logout", "Log out");
+        else
+            return new Anchor("login", "Sign in");
     }
 
     private Component createDrawerContent(Tabs menu) {
@@ -92,12 +103,15 @@ public class MainView extends AppLayout {
     }
 
     private Component[] createMenuItems() {
-        return new Tab[]{createTab("Sign in", SigninView.class), createTab("Register", RegisterView.class),
+        if (SecurityUtils.isUserLoggedIn())
+        return new Tab[]{
                 createTab("Home", HomeView.class), createTab("Hello World", HelloWorldView.class),
                 createTab("Card List", CardListView.class), createTab("Master-Detail", MasterDetailView.class),
                 createTab("Person Form", PersonFormView.class), createTab("Address Form", AddressFormView.class),
                 createTab("Credit Card Form", CreditCardFormView.class), createTab("Map", MapView.class),
                 createTab("Editor", EditorView.class), createTab("Image List", ImageListView.class)};
+        else
+            return new Tab[]{createTab("Sign in", LoginView.class), createTab("Register", RegisterView.class)};
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {
