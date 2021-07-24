@@ -20,18 +20,19 @@ public class UserSession implements Serializable {
             OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
             switch (authenticationToken.getAuthorizedClientRegistrationId()){
                 case "google":
-                    return new User(principal.getAttribute("given_name"), principal.getAttribute("family_name"), principal.getAttribute("email"),
+                    String name = String.format("%s %s", principal.getAttribute("given_name"), principal.getAttribute("family_name"));
+                    return new User(name, principal.getAttribute("email"),
                             principal.getAttribute("picture"));
                 case "facebook":
-                    String name = principal.getAttribute("name");
+                    name = principal.getAttribute("name");
                     String email = principal.getAttribute("email");
-                    String url = "https://graph.facebook.com/xxx/picture?type=square";
-                    return new User(name, null, email, url.replace("xxx", principal.getAttribute("id")));
+                    String url = "https://graph.facebook.com/{id}/picture?type=square".replace("{id}", principal.getAttribute("id"));
+                    return new User(name, email, url);
                 default:
             }
         } else {
             org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-            return new User(principal.getUsername(), null,"implementMe@dot.com", "http://no.picture" );
+            return new User(principal.getUsername(), "implementMe@dot.com", null );
         }
         return null;
     }

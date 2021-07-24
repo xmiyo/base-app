@@ -20,6 +20,7 @@ import com.vaadin.flow.router.RouterLink;
 import com.vaadin.flow.server.PWA;
 import com.vaadin.flow.theme.Theme;
 import com.vaadin.flow.router.PageTitle;
+import com.xmiyo.base.oauth.data.UserSession;
 import com.xmiyo.base.server.security.SecurityUtils;
 import com.xmiyo.base.ui.views.login.LoginView;
 import com.xmiyo.base.ui.views.register.RegisterView;
@@ -34,6 +35,9 @@ import com.xmiyo.base.ui.views.map.MapView;
 import com.xmiyo.base.ui.views.editor.EditorView;
 import com.xmiyo.base.ui.views.imagelist.ImageListView;
 import com.vaadin.flow.component.page.Push;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.PostConstruct;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -43,14 +47,21 @@ import com.vaadin.flow.component.page.Push;
 @Theme(themeFolder = "baseapp")
 public class MainView extends AppLayout {
 
-    private final Tabs menu;
+    private Tabs menu;
     private H1 viewTitle;
 
-    public MainView() {
+    @Autowired
+    UserSession userSession;
+
+    @PostConstruct
+    public void init() {
         setPrimarySection(Section.DRAWER);
         addToNavbar(true, createHeaderContent());
         menu = createMenu();
         addToDrawer(createDrawerContent(menu));
+    }
+
+    public MainView() {
     }
 
     private Component createHeaderContent() {
@@ -65,7 +76,8 @@ public class MainView extends AppLayout {
         layout.expand(viewTitle); //this will push other to right
         layout.add(viewTitle);
         layout.add(addSecurityLink());
-        layout.add(new Avatar());
+        if (SecurityUtils.isUserLoggedIn())
+            layout.add(new Avatar(userSession.getUser().getName(), userSession.getUser().getPicture()));
         return layout;
     }
 
@@ -104,12 +116,12 @@ public class MainView extends AppLayout {
 
     private Component[] createMenuItems() {
         if (SecurityUtils.isUserLoggedIn())
-        return new Tab[]{
-                createTab("Home", HomeView.class), createTab("Hello World", HelloWorldView.class),
-                createTab("Card List", CardListView.class), createTab("Master-Detail", MasterDetailView.class),
-                createTab("Person Form", PersonFormView.class), createTab("Address Form", AddressFormView.class),
-                createTab("Credit Card Form", CreditCardFormView.class), createTab("Map", MapView.class),
-                createTab("Editor", EditorView.class), createTab("Image List", ImageListView.class)};
+            return new Tab[]{
+                    createTab("Home", HomeView.class), createTab("Hello World", HelloWorldView.class),
+                    createTab("Card List", CardListView.class), createTab("Master-Detail", MasterDetailView.class),
+                    createTab("Person Form", PersonFormView.class), createTab("Address Form", AddressFormView.class),
+                    createTab("Credit Card Form", CreditCardFormView.class), createTab("Map", MapView.class),
+                    createTab("Editor", EditorView.class), createTab("Image List", ImageListView.class)};
         else
             return new Tab[]{createTab("Sign in", LoginView.class), createTab("Register", RegisterView.class), createTab("Map", MapView.class)};
     }

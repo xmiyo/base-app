@@ -1,5 +1,6 @@
 package com.xmiyo.base.ui.views.helloworld;
 
+import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.Div;
@@ -43,10 +44,11 @@ public class HelloWorldView extends HorizontalLayout {
         });
 
         Div div = new Div();
-        div.setText("Hello " + userSession.getUser().getFirstName() + " " + userSession.getUser().getLastName() + " email: " + userSession.getUser().getEmail() );
+        div.setText("Hello " + userSession.getUser().getName() + "! email: " + userSession.getUser().getEmail() );
         div.getElement().getStyle().set("font-size", "xx-large");
 
-        Image image = new Image(userSession.getUser().getPicture(), "User Image");
+        String pictureUrl = userSession.getUser().getPicture();
+        Image image = new Image(pictureUrl , "User Image");
 
         // Spring maps the 'logout' url so we should ignore it
         Anchor logout = new Anchor("/logout", "Logout");
@@ -54,7 +56,7 @@ public class HelloWorldView extends HorizontalLayout {
 
 
         setAlignItems(Alignment.CENTER);
-        add(div, image, logout);
+        add(div, image, new Avatar(userSession.getUser().getName(), pictureUrl), logout);
     }
 
 }

@@ -5,6 +5,7 @@ import com.vaadin.flow.component.ComponentEventListener;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.html.Anchor;
+import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -16,13 +17,13 @@ public class SocialButtons extends HorizontalLayout {
 
     public SocialButtons(boolean showFacebook, boolean showGoogle) {
         if (showFacebook)
-            add(createButton("Sign in with Facebook", URL_FACEBOOK, this::onFacebookClick));
+            add(createButton("Sign in with Facebook", URL_FACEBOOK, this::onFacebookClick, VaadinIcon.FACEBOOK.create()));
         if (showGoogle)
-            add(createButton("Sign in with Google", URL_GOOGLE, this::onGoogleClick));
+            add(createButton("Sign in with Google", URL_GOOGLE, this::onGoogleClick, VaadinIcon.GOOGLE_PLUS.create()));
     }
 
-    private Anchor createButton(String text, String url, ComponentEventListener<ClickEvent<Button>> onClickListener) {
-        Button googleLoginButton = new Button(text, VaadinIcon.GOOGLE_PLUS.create());
+    private Anchor createButton(String text, String url, ComponentEventListener<ClickEvent<Button>> onClickListener, Icon icon) {
+        Button googleLoginButton = new Button(text, icon);
         Anchor googleLoginButtonWrapper = new Anchor(url);
         googleLoginButton.addThemeVariants(ButtonVariant.LUMO_SMALL);
         googleLoginButton.addClickListener(onClickListener);
