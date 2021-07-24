@@ -1,19 +1,20 @@
 package com.xmiyo.base.server.security;
 
+import com.xmiyo.base.server.service.AuthenticationService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
-@EnableWebSecurity 
-@Configuration 
+@EnableWebSecurity
+@Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String LOGIN_PROCESSING_URL = "/login";
@@ -21,20 +22,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_URL = "/login";
     private static final String LOGOUT_SUCCESS_URL = "/login";
 
+    @Autowired
+    private AuthenticationService authenticationService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .requestCache().requestCache(new CustomRequestCache())
                 .and().authorizeRequests()
                 .requestMatchers(SecurityUtils::isFrameworkInternalRequest).permitAll()
-
+                .antMatchers("/register", "/password-reset", "/").permitAll()
                 .anyRequest().authenticated()
 
                 .and().formLogin()
                 .loginPage(LOGIN_URL).permitAll()
                 .loginProcessingUrl(LOGIN_PROCESSING_URL)
                 .failureUrl(LOGIN_FAILURE_URL)
-                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+                .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
+                .and().oauth2Login().loginPage(LOGIN_URL).permitAll(); //remove .loginPage... to see oauth2 links instead of vaadin app
     }
 
     @Override
@@ -52,7 +62,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/h2-console/**");
     }
 
-    @Bean
+    /*@Bean
     @Override
     public UserDetailsService userDetailsService() {
         UserDetails user =
@@ -62,5 +72,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         .build();
 
         return new InMemoryUserDetailsManager(user);
+    }*/
+
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .eraseCredentials(true)
+                .userDetailsService(authenticationService)
+                .passwordEncoder(passwordEncoder());
     }
 }

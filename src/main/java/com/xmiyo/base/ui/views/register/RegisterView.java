@@ -1,7 +1,5 @@
 package com.xmiyo.base.ui.views.register;
 
-import com.xmiyo.base.ui.data.entity.SampleAddress;
-import com.xmiyo.base.ui.data.service.SampleAddressService;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -13,13 +11,20 @@ import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
-import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.PageTitle;
+import com.vaadin.flow.router.Route;
+import com.xmiyo.base.oauth.data.UserSession;
+import com.xmiyo.base.ui.data.entity.SampleAddress;
+import com.xmiyo.base.ui.data.service.SampleAddressService;
 import com.xmiyo.base.ui.views.main.MainView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Route(value = "register", layout = MainView.class)
 @PageTitle("Register")
 public class RegisterView extends Div {
+
+    @Autowired
+    UserSession userSession;
 
     private TextField street = new TextField("Street address");
     private TextField postalCode = new TextField("Postal code");
@@ -52,7 +57,7 @@ public class RegisterView extends Div {
     }
 
     private Component createTitle() {
-        return new H3("Address");
+        return new H3("user is " + (userSession == null ? "session is null" : userSession.getUser().getEmail()));
     }
 
     private Component createFormLayout() {

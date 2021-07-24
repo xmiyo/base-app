@@ -111,7 +111,7 @@ public class MainView extends AppLayout {
                 createTab("Credit Card Form", CreditCardFormView.class), createTab("Map", MapView.class),
                 createTab("Editor", EditorView.class), createTab("Image List", ImageListView.class)};
         else
-            return new Tab[]{createTab("Sign in", LoginView.class), createTab("Register", RegisterView.class)};
+            return new Tab[]{createTab("Sign in", LoginView.class), createTab("Register", RegisterView.class), createTab("Map", MapView.class)};
     }
 
     private static Tab createTab(String text, Class<? extends Component> navigationTarget) {

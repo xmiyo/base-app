@@ -70,7 +70,7 @@
       "construct-style-sheets-polyfill": "2.4.6",
       "extract-loader": "5.1.0"
     },
-    "hash": "91b0412ef7e3226f449fa0197a41094e020cc56cafa86e0d097bcc877a577b3b"
+    "hash": "7f4f1e1a9c379d215a7a70c4f5912ae7855938d675aef9d70dbbb8f5c9e8073e"
   },
   "dependencies": {
     "lit-element": "2.5.1",

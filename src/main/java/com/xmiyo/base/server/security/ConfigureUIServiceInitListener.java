@@ -14,7 +14,8 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 	public void serviceInit(ServiceInitEvent event) {
 		event.getSource().addUIInitListener(uiEvent -> { 
 			final UI ui = uiEvent.getUI();
-			ui.addBeforeEnterListener(this::authenticateNavigation);
+			//do not redirect to login view, user needs access other unauth pages
+			//ui.addBeforeEnterListener(this::authenticateNavigation);
 		});
 	}
 
