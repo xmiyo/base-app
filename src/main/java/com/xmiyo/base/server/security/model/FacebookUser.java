@@ -2,23 +2,24 @@ package com.xmiyo.base.server.security.model;
 
 import java.util.Map;
 
-public class FacebookUser {
-
-    private Map<String, Object> attributes;
+public class FacebookUser extends OAuthUser {
 
     public FacebookUser(Map<String, Object> attributes) {
         this.attributes = attributes;
     }
 
+    @Override
     public String getId() {
         return (String) attributes.get("id");
     }
 
-    public String getName() {
-        return (String) attributes.get("name");
+    @Override
+    public String getPicture() {
+        return "https://graph.facebook.com/{id}/picture?type=square".replace("{id}", getId());
     }
 
-    public String getEmail() {
-        return (String) attributes.get("email");
+    @Override
+    public OAuthUserType getType() {
+        return OAuthUserType.facebook;
     }
 }

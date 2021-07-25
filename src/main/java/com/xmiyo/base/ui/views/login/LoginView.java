@@ -33,7 +33,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
         LoginI18n i18n = LoginI18n.createDefault();
         i18n.getForm().setTitle("Sign in");
         i18n.getForm().setUsername("Email");
-        i18n.setAdditionalInformation("Don't have account? try with 'user' and 'password'");
+        i18n.setAdditionalInformation("Don't have account? try with 'user@localhost' and 'password'");
         login.setI18n(i18n);
 
         add(login);

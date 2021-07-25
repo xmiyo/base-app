@@ -1,5 +1,13 @@
 package com.xmiyo.base.oauth.data;
 
+import com.xmiyo.base.server.repository.model.Account;
+import com.xmiyo.base.server.security.model.FacebookUser;
+import com.xmiyo.base.server.security.model.GoogleUser;
+import com.xmiyo.base.server.security.model.OAuthUser;
+import com.xmiyo.base.server.security.model.OAuthUserType;
+import com.xmiyo.base.server.service.AccountService;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -13,28 +21,36 @@ import java.io.Serializable;
 @SessionScope
 public class UserSession implements Serializable {
 
-    public User getUser() {
+    @Autowired
+    private AccountService accountService;
+
+    public ApplicationUser getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication instanceof OAuth2AuthenticationToken){
             OAuth2AuthenticationToken authenticationToken = (OAuth2AuthenticationToken) authentication;
             OAuth2AuthenticatedPrincipal principal = (OAuth2AuthenticatedPrincipal) authentication.getPrincipal();
-            switch (authenticationToken.getAuthorizedClientRegistrationId()){
-                case "google":
-                    String name = String.format("%s %s", principal.getAttribute("given_name"), principal.getAttribute("family_name"));
-                    return new User(name, principal.getAttribute("email"),
-                            principal.getAttribute("picture"));
-                case "facebook":
-                    name = principal.getAttribute("name");
-                    String email = principal.getAttribute("email");
-                    String url = "https://graph.facebook.com/{id}/picture?type=square".replace("{id}", principal.getAttribute("id"));
-                    return new User(name, email, url);
+            OAuthUserType oAuthUserType = OAuthUserType.valueOf(authenticationToken.getAuthorizedClientRegistrationId());
+            OAuthUser user = null;
+            ApplicationUser sessionUser = new ApplicationUser();
+            switch (oAuthUserType){
+                case google:
+                    user = new GoogleUser(principal.getAttributes());
+                    break;
+                case facebook:
+                    user = new FacebookUser(principal.getAttributes());
+                    break;
                 default:
+                    break;
             }
+            BeanUtils.copyProperties(user, sessionUser);
+            Account account = accountService.findAccountByEmail(user.getEmail());
+            sessionUser.setId(account.getId());
+            return sessionUser;
         } else {
             org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) authentication.getPrincipal();
-            return new User(principal.getUsername(), "implementMe@dot.com", null );
+            Account account = accountService.findAccountByEmail(principal.getUsername());
+            return new ApplicationUser(account.getId(), account.getUsername(), account.getEmail(), null);
         }
-        return null;
     }
 
     public boolean isLoggedIn() {

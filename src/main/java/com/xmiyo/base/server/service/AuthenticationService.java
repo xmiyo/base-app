@@ -21,10 +21,10 @@ public class AuthenticationService implements UserDetailsService {
     private AccountRepository accountRepository;
 
     @Override
-    public User loadUserByUsername(String userName) throws UsernameNotFoundException {
-        Account u = accountRepository.findOneByUsername(userName);
+    public User loadUserByUsername(String email) throws UsernameNotFoundException {
+        Account u = accountRepository.findOneByEmail(email);
         if(u == null){
-            throw new UsernameNotFoundException("User not found : " + userName);
+            throw new UsernameNotFoundException("User not found : " + email);
         }
         User user = createUser(u);
 
@@ -32,7 +32,7 @@ public class AuthenticationService implements UserDetailsService {
     }
 
     private User createUser(Account u) {
-        return new User(u.getUsername(), u.getPassword(), createAuthorities(u));
+        return new User(u.getEmail(), u.getPassword(), createAuthorities(u));
     }
 
     private Collection<GrantedAuthority> createAuthorities(Account u) {

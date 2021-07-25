@@ -2,9 +2,7 @@ package com.xmiyo.base.server.security.model;
 
 import java.util.Map;
 
-public class GoogleUser {
-
-    private Map<String, Object> attributes;
+public class GoogleUser extends OAuthUser {
 
     public GoogleUser(Map<String, Object> attributes) {
         this.attributes = attributes;
@@ -33,4 +31,10 @@ public class GoogleUser {
     public String getPicture() {
         return (String) attributes.get("picture");
     }
+
+    @Override
+    public OAuthUserType getType() {
+        return OAuthUserType.google;
+    }
+
 }

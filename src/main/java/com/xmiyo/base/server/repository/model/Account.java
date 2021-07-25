@@ -34,9 +34,10 @@ public class Account {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Account(String username, String password, String role, boolean activated) {
+    public Account(String username, String password, String email, String role, boolean activated) {
         this.username = username;
         this.password = password;
+        this.email = email;
         this.role = role;
         this.activated = activated;
     }

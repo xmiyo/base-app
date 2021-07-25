@@ -44,7 +44,7 @@ public class HelloWorldView extends HorizontalLayout {
         });
 
         Div div = new Div();
-        div.setText("Hello " + userSession.getUser().getName() + "! email: " + userSession.getUser().getEmail() );
+        div.setText("Hello " + userSession.getUser().getName() + "! email: " + userSession.getUser().getEmail() + ". internal application ID: " + userSession.getUser().getId());
         div.getElement().getStyle().set("font-size", "xx-large");
 
         String pictureUrl = userSession.getUser().getPicture();
