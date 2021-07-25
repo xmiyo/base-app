@@ -48,7 +48,8 @@ public class HelloWorldView extends HorizontalLayout {
         div.getElement().getStyle().set("font-size", "xx-large");
 
         String pictureUrl = userSession.getUser().getPicture();
-        Image image = new Image(pictureUrl , "User Image");
+        Image image = new Image(pictureUrl != null ? pictureUrl : "none"  , "User Image");
+        Avatar avatar = new Avatar(userSession.getUser().getName(), pictureUrl);
 
         // Spring maps the 'logout' url so we should ignore it
         Anchor logout = new Anchor("/logout", "Logout");
@@ -56,7 +57,7 @@ public class HelloWorldView extends HorizontalLayout {
 
 
         setAlignItems(Alignment.CENTER);
-        add(div, image, new Avatar(userSession.getUser().getName(), pictureUrl), logout);
+        add(div, image, avatar, logout);
     }
 
 }

@@ -4,9 +4,11 @@ package com.xmiyo.base.server.service;
 import com.xmiyo.base.server.repository.AccountRepository;
 import com.xmiyo.base.server.repository.model.Account;
 import com.xmiyo.base.server.repository.model.AccountRole;
-import com.xmiyo.base.server.repository.model.AccountType;
+import com.xmiyo.base.server.security.model.GoogleUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -24,10 +26,10 @@ public class AccountService {
     @PostConstruct
     public void initialize(){
         if(accountRepository.findOneByUsername("admin") == null){
-            save(new Account("admin", "admin", AccountRole.ADMIN.name(), AccountType.APPLICATION, true));
+            save(new Account("admin", "admin", AccountRole.ADMIN.name(), true));
         }
         if(accountRepository.findOneByUsername("user") == null){
-            save(new Account("user", "password", AccountRole.USER.name(), AccountType.APPLICATION, true));
+            save(new Account("user", "password", AccountRole.USER.name(),true));
         }
     }
 

@@ -25,6 +25,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private AuthenticationService authenticationService;
 
+    @Autowired
+    private GoogleUserService googleUserService;
+
+    @Autowired
+    FacebookUserService facebookUserService;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -45,6 +51,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .failureUrl(LOGIN_FAILURE_URL)
                 .and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL)
                 .and().oauth2Login().loginPage(LOGIN_URL).permitAll(); //remove .loginPage... to see oauth2 links instead of vaadin app
+
+        http.oauth2Login().userInfoEndpoint().userService(facebookUserService).oidcUserService(googleUserService);
     }
 
     @Override
@@ -61,18 +69,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 "/styles/**",
                 "/h2-console/**");
     }
-
-    /*@Bean
-    @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withUsername("user")
-                        .password("{noop}password")
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
-    }*/
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
